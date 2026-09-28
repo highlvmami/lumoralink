@@ -19,4 +19,7 @@ export const RESERVED_SLUGS = new Set([
   "settings",
   "admin",
   "_next",
+  "privacy",
+  "terms",
+  "favicon.ico",
 ]);
