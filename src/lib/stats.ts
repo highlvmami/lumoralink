@@ -9,10 +9,9 @@ const TIME_ZONE = "Europe/Istanbul";
 export type DailyPoint = { day: string; clicks: number };
 export type BreakdownRow = { label: string; count: number };
 
-// Gruplanabilir sütunlar. Sütun adını SQL'e doğrudan yazdığımız için
-// yalnızca bu listedeki değerlere izin veriyoruz (SQL injection'a kapı açmamak için).
-const BREAKDOWN_COLUMNS = ["referrer", "country", "device", "browser", "os"] as const;
-type BreakdownColumn = (typeof BREAKDOWN_COLUMNS)[number];
+// Gruplanabilir sütunlar. Sütun adını SQL'e doğrudan yazdığımız için TypeScript
+// yalnızca bu değerlere izin verir (dışarıdan gelen metin SQL'e karışamaz → SQL injection yok).
+type BreakdownColumn = "referrer" | "country" | "device" | "browser" | "os";
 
 async function dailyClicks(linkId: string, days: number) {
   // generate_series her gün için bir satır üretir; LEFT JOIN sayesinde

@@ -3,9 +3,12 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { BreakdownList } from "@/components/breakdown-list";
 import { ClicksChart } from "@/components/clicks-chart";
+import { CopyButton } from "@/components/copy-button";
 import { prisma } from "@/lib/prisma";
+import { qrSvg } from "@/lib/qr";
 import { getSession } from "@/lib/session";
 import { getLinkStats } from "@/lib/stats";
+import { getBaseUrl } from "@/lib/url";
 
 export const metadata = { title: "Link istatistikleri" };
 
@@ -26,7 +29,8 @@ export default async function LinkStatsPage({ params }: PageProps<"/dashboard/li
   });
   if (!link) notFound();
 
-  const stats = await getLinkStats(link.id);
+  const shortUrl = `${await getBaseUrl()}/${link.slug}`;
+  const [stats, qr] = await Promise.all([getLinkStats(link.id), qrSvg(shortUrl)]);
 
   const tiles = [
     { label: "Toplam tıklama", value: stats.total },
@@ -40,7 +44,10 @@ export default async function LinkStatsPage({ params }: PageProps<"/dashboard/li
         <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline">
           ← Panele dön
         </Link>
-        <h1 className="font-mono text-2xl font-bold">/{link.slug}</h1>
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="font-mono text-2xl font-bold">/{link.slug}</h1>
+          <CopyButton text={shortUrl} />
+        </div>
         <a href={link.url} target="_blank" className="block truncate text-sm text-zinc-600 hover:underline dark:text-zinc-400">
           {link.url}
         </a>
@@ -56,10 +63,40 @@ export default async function LinkStatsPage({ params }: PageProps<"/dashboard/li
         ))}
       </div>
 
-      <section className="rounded-lg border border-zinc-200 p-5 dark:border-zinc-800">
-        <h2 className="mb-3 font-semibold">Son 30 gün</h2>
-        <ClicksChart data={stats.daily} />
-      </section>
+      <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
+        <section className="rounded-lg border border-zinc-200 p-5 dark:border-zinc-800">
+          <h2 className="mb-3 font-semibold">Son 30 gün</h2>
+          <ClicksChart data={stats.daily} />
+        </section>
+
+        <section className="flex flex-col items-center gap-3 rounded-lg border border-zinc-200 p-5 dark:border-zinc-800">
+          <h2 className="self-start font-semibold">QR kod</h2>
+          {/* SVG'yi sunucuda kendimiz ürettiğimiz için sayfaya doğrudan gömmek güvenli */}
+          <div
+            className="w-44 overflow-hidden rounded-md [&>svg]:h-auto [&>svg]:w-full"
+            role="img"
+            aria-label={`${shortUrl} için QR kod`}
+            dangerouslySetInnerHTML={{ __html: qr }}
+          />
+          <div className="flex gap-2">
+            <a
+              href={`/api/links/${link.id}/qr?format=png`}
+              className="rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white dark:bg-white dark:text-black"
+            >
+              PNG indir
+            </a>
+            <a
+              href={`/api/links/${link.id}/qr?format=svg`}
+              className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium dark:border-zinc-700"
+            >
+              SVG indir
+            </a>
+          </div>
+          <p className="max-w-44 text-center text-xs text-zinc-500">
+            SVG baskı için idealdir, her boyutta net kalır.
+          </p>
+        </section>
+      </div>
 
       <div className="grid gap-4 md:grid-cols-2">
         <BreakdownList
