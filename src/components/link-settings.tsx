@@ -2,6 +2,7 @@
 // Link ayarları: hedef adres, aktif/pasif, son kullanma tarihi ve silme.
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ui } from "@/lib/ui";
 
 type Props = {
   link: { id: string; url: string; isActive: boolean; expiresAt: string | null };
@@ -17,8 +18,7 @@ function toInputValue(iso: string | null) {
   return local.toISOString().slice(0, 16); // "2026-10-01T12:00"
 }
 
-const inputClass =
-  "w-full rounded-lg border border-zinc-300 bg-transparent px-3 py-2 outline-none focus:border-zinc-500 dark:border-zinc-700";
+const inputClass = ui.input;
 
 export function LinkSettings({ link }: Props) {
   const router = useRouter();
@@ -79,14 +79,14 @@ export function LinkSettings({ link }: Props) {
   }
 
   return (
-    <section className="space-y-6 rounded-lg border border-zinc-200 p-5 dark:border-zinc-800">
+    <section className={`${ui.card} space-y-6 p-6`}>
       <h2 className="font-semibold">Ayarlar</h2>
 
       <form onSubmit={save} className="space-y-4">
         <label className="block space-y-1">
           <span className="text-sm font-medium">Hedef adres</span>
           <input type="url" required value={url} onChange={(e) => setUrl(e.target.value)} className={inputClass} />
-          <span className="block text-xs text-zinc-500">
+          <span className="block text-xs text-muted">
             Kısa link ve QR kod aynı kalır, sadece yönlendirdiği adres değişir.
           </span>
         </label>
@@ -96,11 +96,11 @@ export function LinkSettings({ link }: Props) {
             type="checkbox"
             checked={isActive}
             onChange={(e) => setIsActive(e.target.checked)}
-            className="h-4 w-4 accent-zinc-900 dark:accent-white"
+            className="h-4 w-4 accent-[var(--primary)]"
           />
           <span className="text-sm">
             <span className="font-medium">Link aktif</span>
-            <span className="text-zinc-500"> · kapatırsan tıklayanlar “bulunamadı” sayfası görür</span>
+            <span className="text-muted"> · kapatırsan tıklayanlar “bulunamadı” sayfası görür</span>
           </span>
         </label>
 
@@ -117,27 +117,27 @@ export function LinkSettings({ link }: Props) {
               <button
                 type="button"
                 onClick={() => setExpiresAt("")}
-                className="shrink-0 rounded-lg border border-zinc-300 px-3 text-sm dark:border-zinc-700"
+                className={`${ui.btnSecondary} shrink-0`}
               >
                 Kaldır
               </button>
             )}
           </div>
-          <span className="block text-xs text-zinc-500">Boş bırakırsan link süresiz çalışır.</span>
+          <span className="block text-xs text-muted">Boş bırakırsan link süresiz çalışır.</span>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             type="submit"
             disabled={!changed || saving}
-            className="rounded-lg bg-zinc-900 px-5 py-2 text-sm font-medium text-white disabled:opacity-40 dark:bg-white dark:text-black"
+            className={`${ui.btnPrimary} px-5 py-2.5 text-sm disabled:opacity-40`}
           >
             {saving ? "Kaydediliyor..." : "Kaydet"}
           </button>
           {message && (
             <span
               role="status"
-              className={`text-sm ${message.type === "ok" ? "text-green-700 dark:text-green-400" : "text-red-700 dark:text-red-400"}`}
+              className={`text-sm ${message.type === "ok" ? "text-brand" : "text-danger"}`}
             >
               {message.type === "ok" ? "✓ " : ""}
               {message.text}
@@ -147,8 +147,8 @@ export function LinkSettings({ link }: Props) {
       </form>
 
       {/* Tehlikeli bölge: silme geri alınamaz, bu yüzden iki adımlı onay */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-200 pt-4 dark:border-zinc-800">
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5">
+        <p className="text-sm text-muted">
           Silinen link ve tüm tıklama istatistikleri geri getirilemez.
         </p>
         {confirmDelete ? (
@@ -156,14 +156,14 @@ export function LinkSettings({ link }: Props) {
             <button
               onClick={() => setConfirmDelete(false)}
               disabled={deleting}
-              className="rounded-lg border border-zinc-300 px-4 py-2 text-sm dark:border-zinc-700"
+              className={ui.btnSecondary}
             >
               Vazgeç
             </button>
             <button
               onClick={remove}
               disabled={deleting}
-              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+              className="inline-flex items-center rounded-xl bg-[#b42318] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#912018] disabled:opacity-50"
             >
               {deleting ? "Siliniyor..." : "Evet, kalıcı olarak sil"}
             </button>
@@ -171,7 +171,7 @@ export function LinkSettings({ link }: Props) {
         ) : (
           <button
             onClick={() => setConfirmDelete(true)}
-            className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
+            className={ui.btnDanger}
           >
             Linki sil
           </button>

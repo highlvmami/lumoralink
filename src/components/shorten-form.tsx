@@ -3,6 +3,7 @@
 // Bu yüzden dosyanın başında "use client" var.
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ui } from "@/lib/ui";
 
 type Result = { shortUrl: string; url: string };
 
@@ -63,7 +64,8 @@ export function ShortenForm() {
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://cok-uzun-bir-adres.com/..."
-          className="w-full rounded-lg border border-zinc-300 bg-transparent px-4 py-3 outline-none focus:border-zinc-500 dark:border-zinc-700"
+          aria-label="Kısaltılacak adres"
+          className={ui.input}
         />
         <div className="flex flex-col gap-3 sm:flex-row">
           <input
@@ -71,34 +73,26 @@ export function ShortenForm() {
             value={customSlug}
             onChange={(e) => setCustomSlug(e.target.value)}
             placeholder="Özel kısa ad (isteğe bağlı)"
-            className="flex-1 rounded-lg border border-zinc-300 bg-transparent px-4 py-3 outline-none focus:border-zinc-500 dark:border-zinc-700"
+            aria-label="Özel kısa ad"
+            className={`${ui.input} sm:flex-1`}
           />
-          <button
-            type="submit"
-            disabled={loading}
-            className="rounded-lg bg-zinc-900 px-6 py-3 font-medium text-white disabled:opacity-50 dark:bg-white dark:text-black"
-          >
+          <button type="submit" disabled={loading} className={`${ui.btnPrimary} sm:px-8`}>
             {loading ? "Kısaltılıyor..." : "Kısalt"}
           </button>
         </div>
       </form>
 
-      {error && (
-        <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
-          {error}
-        </p>
-      )}
+      {error && <p className={ui.error}>{error}</p>}
 
       {result && (
-        <div className="flex items-center justify-between gap-3 rounded-lg bg-green-50 px-4 py-3 dark:bg-green-950">
-          <a
-            href={result.shortUrl}
-            target="_blank"
-            className="truncate font-mono text-green-800 underline dark:text-green-300"
-          >
-            {result.shortUrl}
-          </a>
-          <button onClick={copy} className="shrink-0 text-sm font-medium">
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-soft-strong bg-soft px-4 py-3">
+          <div className="min-w-0">
+            <p className="text-xs font-medium text-muted">Kısa linkin hazır</p>
+            <a href={result.shortUrl} target="_blank" className="block truncate font-mono font-medium text-brand underline-offset-2 hover:underline">
+              {result.shortUrl}
+            </a>
+          </div>
+          <button onClick={copy} className={`${ui.btnSecondary} shrink-0`}>
             {copied ? "Kopyalandı ✓" : "Kopyala"}
           </button>
         </div>

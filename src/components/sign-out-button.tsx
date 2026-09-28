@@ -12,7 +12,10 @@ export function SignOutButton() {
   }
 
   return (
-    <button onClick={signOut} className="text-sm text-zinc-600 hover:underline dark:text-zinc-400">
+    <button
+      onClick={signOut}
+      className="rounded-lg px-3 py-1.5 text-sm text-muted transition hover:bg-soft hover:text-ink"
+    >
       Çıkış yap
     </button>
   );

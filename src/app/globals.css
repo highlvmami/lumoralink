@@ -1,28 +1,76 @@
 @import "tailwindcss";
 
+/*
+  LumoraLink renk sistemi: doğal yeşil tonları.
+  Bileşenler renkleri doğrudan değil, anlamlarıyla kullanır (bg-surface, text-muted,
+  bg-primary...). Bir tonu değiştirmek için sadece buradaki değeri değiştirmek yeter;
+  koyu tema da aynı adların farklı değerleridir.
+  Kontrastlar WCAG'a göre ölçüldü: gövde metni ≥ 13:1, soluk metin ≥ 5:1, düğme ≥ 6:1.
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --series-1: #2a78d6; /* grafik rengi (açık tema) */
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --canvas: #f6f7f2; /* sayfa zemini: yeşile çalan krem */
+  --surface: #ffffff; /* kartlar */
+  --soft: #e6f1e3; /* açık yeşil dolgu */
+  --soft-strong: #d3e8cd;
+  --ink: #1c2b21; /* ana metin: yeşile çalan koyu */
+  --muted: #5c6b60; /* ikincil metin */
+  --line: #e1e7dc; /* ince çizgiler */
+  --line-strong: #c9d4c4; /* form kenarlıkları */
+  --primary: #2f6b3f; /* orman yeşili: ana düğmeler */
+  --primary-hover: #255733;
+  --on-primary: #ffffff;
+  --brand: #2f6b3f; /* vurgulu metin ve bağlantılar */
+  --series-1: #3a8a4c; /* grafik rengi (dataviz doğrulamasından geçti) */
+  --danger: #b42318;
+  --danger-soft: #fdecea;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --series-1: #3987e5; /* koyu zeminde daha okunur ton */
+    --canvas: #0f1712;
+    --surface: #152019;
+    --soft: #1d2d23;
+    --soft-strong: #25392c;
+    --ink: #e6eee7;
+    --muted: #9aab9e;
+    --line: #243329;
+    --line-strong: #33473a;
+    --primary: #86cf8f;
+    --primary-hover: #9edba6;
+    --on-primary: #0f1712;
+    --brand: #a6dcac;
+    --series-1: #58a866;
+    --danger: #f4a39a;
+    --danger-soft: #3a1a17;
   }
 }
 
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-soft: var(--soft);
+  --color-soft-strong: var(--soft-strong);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-brand: var(--brand);
+  --color-series: var(--series-1);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fraunces);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+::selection {
+  background: var(--soft-strong);
 }

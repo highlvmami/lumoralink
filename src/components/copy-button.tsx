@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { ui } from "@/lib/ui";
 
 export function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
@@ -13,7 +14,7 @@ export function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={copy}
-      className="rounded-md border border-zinc-300 px-3 py-1 text-sm font-medium hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-900"
+      className={ui.btnSecondary}
     >
       {copied ? "Kopyalandı ✓" : "Kopyala"}
     </button>

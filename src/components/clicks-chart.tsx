@@ -24,22 +24,22 @@ export function ClicksChart({ data }: { data: DailyPoint[] }) {
         {activePoint ? (
           <span>
             <span className="font-semibold tabular-nums">{activePoint.clicks} tıklama</span>
-            <span className="text-zinc-500"> · {fullFormat.format(toDate(activePoint.day))}</span>
+            <span className="text-muted"> · {fullFormat.format(toDate(activePoint.day))}</span>
           </span>
         ) : (
-          <span className="text-zinc-500">Bir güne gelerek ayrıntıyı gör</span>
+          <span className="text-muted">Bir güne gelerek ayrıntıyı gör</span>
         )}
       </div>
 
       <div className="relative">
         {/* Arka plan çizgileri: en üst değer ve sıfır tabanı */}
         <div className="pointer-events-none absolute inset-x-0 top-0 flex items-center gap-2">
-          <div className="h-px flex-1 border-t border-dashed border-zinc-200 dark:border-zinc-800" />
-          <span className="text-xs tabular-nums text-zinc-500">{max}</span>
+          <div className="h-px flex-1 border-t border-dashed border-line" />
+          <span className="text-xs tabular-nums text-muted">{max}</span>
         </div>
 
         <div
-          className="flex h-40 items-end gap-0.5 border-b border-zinc-300 pr-8 dark:border-zinc-700"
+          className="flex h-40 items-end gap-0.5 border-b border-line-strong pr-8"
           onMouseLeave={() => setActive(null)}
         >
           {data.map((point, i) => (
@@ -54,7 +54,7 @@ export function ClicksChart({ data }: { data: DailyPoint[] }) {
               className="group flex h-full flex-1 items-end justify-center outline-none"
             >
               <div
-                className="w-full max-w-6 rounded-t bg-[var(--series-1)] transition-opacity group-focus-visible:ring-2 group-focus-visible:ring-[var(--series-1)] group-focus-visible:ring-offset-2"
+                className="w-full max-w-6 rounded-t-[4px] bg-series transition-opacity group-focus-visible:ring-2 group-focus-visible:ring-series group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-surface"
                 style={{
                   height: point.clicks === 0 ? 0 : `${Math.max(2, (point.clicks / max) * 100)}%`,
                   opacity: active === null || active === i ? 1 : 0.4,
@@ -64,7 +64,7 @@ export function ClicksChart({ data }: { data: DailyPoint[] }) {
           ))}
         </div>
 
-        <div className="mt-1 flex justify-between pr-8 text-xs text-zinc-500">
+        <div className="mt-1 flex justify-between pr-8 text-xs text-muted">
           <span>{dayFormat.format(toDate(data[0].day))}</span>
           <span>{dayFormat.format(toDate(data[Math.floor(data.length / 2)].day))}</span>
           <span>Bugün</span>
@@ -73,9 +73,9 @@ export function ClicksChart({ data }: { data: DailyPoint[] }) {
 
       {/* Erişilebilirlik: aynı veri tablo olarak da okunabilir */}
       <details className="text-sm">
-        <summary className="cursor-pointer text-zinc-500">Tablo olarak gör</summary>
+        <summary className="cursor-pointer text-muted hover:text-ink">Tablo olarak gör</summary>
         <table className="mt-2 w-full max-w-sm text-left">
-          <thead className="text-zinc-500">
+          <thead className="text-muted">
             <tr>
               <th className="py-1 font-medium">Gün</th>
               <th className="py-1 text-right font-medium">Tıklama</th>
@@ -83,7 +83,7 @@ export function ClicksChart({ data }: { data: DailyPoint[] }) {
           </thead>
           <tbody>
             {[...data].reverse().map((p) => (
-              <tr key={p.day} className="border-t border-zinc-100 dark:border-zinc-900">
+              <tr key={p.day} className="border-t border-line">
                 <td className="py-1">{dayFormat.format(toDate(p.day))}</td>
                 <td className="py-1 text-right tabular-nums">{p.clicks}</td>
               </tr>

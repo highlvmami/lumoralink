@@ -4,11 +4,11 @@ import type { LinkStatus } from "@/lib/link-status";
 const styles: Record<LinkStatus, { label: string; className: string }> = {
   active: {
     label: "Aktif",
-    className: "bg-green-50 text-green-800 dark:bg-green-950 dark:text-green-300",
+    className: "bg-soft text-brand",
   },
   inactive: {
     label: "Pasif",
-    className: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
+    className: "bg-line text-muted",
   },
   expired: {
     label: "Süresi doldu",
@@ -20,7 +20,7 @@ export function LinkStatusBadge({ status, hideActive = false }: { status: LinkSt
   if (hideActive && status === "active") return null;
   const { label, className } = styles[status];
   return (
-    <span className={`inline-block rounded-full px-2 py-0.5 font-sans text-xs font-medium ${className}`}>
+    <span className={`inline-block rounded-full px-2.5 py-0.5 font-sans text-xs font-medium ${className}`}>
       {label}
     </span>
   );
