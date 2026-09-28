@@ -20,3 +20,21 @@ export const createLinkSchema = z.object({
 });
 
 export type CreateLinkInput = z.infer<typeof createLinkSchema>;
+
+// Link güncelleme: gönderilen alanlar değişir, gönderilmeyenlere dokunulmaz.
+// Kısa ad (slug) bilerek değiştirilemez: basılmış QR kodlar ve paylaşılmış linkler bozulurdu.
+export const updateLinkSchema = z
+  .object({
+    url: z.httpUrl({ error: "Geçerli bir http(s) adresi gir" }).max(2048, "Adres çok uzun").optional(),
+    isActive: z.boolean().optional(),
+    // ISO tarih ("2026-10-01T12:00:00+03:00") veya null (= süresiz yap)
+    expiresAt: z
+      .iso.datetime({ offset: true, error: "Geçersiz tarih" })
+      .transform((value) => new Date(value))
+      .refine((date) => date > new Date(), "Son kullanma tarihi gelecekte olmalı")
+      .nullable()
+      .optional(),
+  })
+  .refine((data) => Object.keys(data).length > 0, "Değiştirilecek bir alan gönder");
+
+export type UpdateLinkInput = z.infer<typeof updateLinkSchema>;

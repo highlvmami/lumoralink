@@ -4,6 +4,9 @@ import { notFound, redirect } from "next/navigation";
 import { BreakdownList } from "@/components/breakdown-list";
 import { ClicksChart } from "@/components/clicks-chart";
 import { CopyButton } from "@/components/copy-button";
+import { LinkSettings } from "@/components/link-settings";
+import { LinkStatusBadge } from "@/components/link-status-badge";
+import { getLinkStatus } from "@/lib/link-status";
 import { prisma } from "@/lib/prisma";
 import { qrSvg } from "@/lib/qr";
 import { getSession } from "@/lib/session";
@@ -25,7 +28,7 @@ export default async function LinkStatsPage({ params }: PageProps<"/dashboard/li
   // istatistiklerini göremesin. Bulunamazsa 404 (varlığını bile sızdırmıyoruz).
   const link = await prisma.link.findFirst({
     where: { id, userId: session.user.id },
-    select: { id: true, slug: true, url: true, createdAt: true },
+    select: { id: true, slug: true, url: true, createdAt: true, isActive: true, expiresAt: true },
   });
   if (!link) notFound();
 
@@ -46,6 +49,7 @@ export default async function LinkStatsPage({ params }: PageProps<"/dashboard/li
         </Link>
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="font-mono text-2xl font-bold">/{link.slug}</h1>
+          <LinkStatusBadge status={getLinkStatus(link)} />
           <CopyButton text={shortUrl} />
         </div>
         <a href={link.url} target="_blank" className="block truncate text-sm text-zinc-600 hover:underline dark:text-zinc-400">
@@ -116,6 +120,16 @@ export default async function LinkStatsPage({ params }: PageProps<"/dashboard/li
         <BreakdownList title="Tarayıcı" rows={stats.breakdowns.browser} total={stats.total} emptyLabel="Bilinmiyor" />
         <BreakdownList title="İşletim sistemi" rows={stats.breakdowns.os} total={stats.total} emptyLabel="Bilinmiyor" />
       </div>
+
+      <LinkSettings
+        link={{
+          id: link.id,
+          url: link.url,
+          isActive: link.isActive,
+          // Date nesnesi sunucudan tarayıcıya metin olarak geçer
+          expiresAt: link.expiresAt?.toISOString() ?? null,
+        }}
+      />
     </main>
   );
 }

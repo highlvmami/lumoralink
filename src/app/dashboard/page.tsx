@@ -2,7 +2,9 @@
 // Kontrolü sayfanın kendisinde (sunucuda) yapıyoruz; tarayıcıda gizlemek güvenlik sağlamaz.
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { LinkStatusBadge } from "@/components/link-status-badge";
 import { ShortenForm } from "@/components/shorten-form";
+import { getLinkStatus } from "@/lib/link-status";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 
@@ -23,6 +25,8 @@ export default async function DashboardPage() {
       slug: true,
       url: true,
       createdAt: true,
+      isActive: true,
+      expiresAt: true,
       _count: { select: { clicks: true } },
     },
   });
@@ -70,6 +74,9 @@ export default async function DashboardPage() {
                     >
                       ↗
                     </a>
+                    <span className="ml-2">
+                      <LinkStatusBadge status={getLinkStatus(link)} hideActive />
+                    </span>
                   </td>
                   <td className="max-w-xs truncate px-4 py-3 text-zinc-600 dark:text-zinc-400">
                     {link.url}

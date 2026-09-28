@@ -3,6 +3,7 @@
 // sadece bir yönlendirme cevabı dönüyoruz. Bu çok daha hızlı.
 import { after, NextResponse, type NextRequest } from "next/server";
 import { parseClick } from "@/lib/analytics";
+import { getLinkStatus } from "@/lib/link-status";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest, ctx: RouteContext<"/[slug]">) {
@@ -13,10 +14,11 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/[slug]">) {
     select: { id: true, url: true, isActive: true, expiresAt: true },
   });
 
-  if (!link || !link.isActive) {
+  const status = link ? getLinkStatus(link) : null;
+  if (!link || status === "inactive") {
     return new Response("Link bulunamadı", { status: 404 });
   }
-  if (link.expiresAt && link.expiresAt < new Date()) {
+  if (status === "expired") {
     // 410 Gone: kaynak vardı ama artık kalıcı olarak yok
     return new Response("Bu linkin süresi dolmuş", { status: 410 });
   }
