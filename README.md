@@ -1,8 +1,8 @@
 # LumoraLink
 
-Link kısaltıcı ve analitik paneli.
+Link kısaltıcı ve analitik analiz paneli.
 
-Uzun linkleri kısaltan, her tıklamayı kaydeden ve istatistikleri panelde gösteren full-stack bir uygulama. Her link için QR kod da üretir.
+Uzun linkleri kısaltan, her tıklamayı kaydeden ve istatistikleri panelde gösteren ve linkler için qr üreten bir yönetim paneli.
 
 ## Teknolojiler
 
