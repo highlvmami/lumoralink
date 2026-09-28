@@ -1,5 +1,6 @@
 // Korumalı sayfa: yalnızca giriş yapan kullanıcı görebilir.
 // Kontrolü sayfanın kendisinde (sunucuda) yapıyoruz; tarayıcıda gizlemek güvenlik sağlamaz.
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ShortenForm } from "@/components/shorten-form";
 import { prisma } from "@/lib/prisma";
@@ -35,7 +36,7 @@ export default async function DashboardPage() {
           Merhaba, {session.user.name.split(" ")[0]}
         </h1>
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          {links.length} link · toplam {totalClicks} tıklama
+          {links.length} link · toplam {totalClicks} tıklama · istatistik için bir linke tıkla
         </p>
       </div>
 
@@ -58,8 +59,16 @@ export default async function DashboardPage() {
               {links.map((link) => (
                 <tr key={link.id}>
                   <td className="px-4 py-3 font-mono">
-                    <a href={`/${link.slug}`} target="_blank" className="underline">
+                    <Link href={`/dashboard/links/${link.id}`} className="font-medium underline">
                       /{link.slug}
+                    </Link>
+                    <a
+                      href={`/${link.slug}`}
+                      target="_blank"
+                      aria-label="Linki yeni sekmede aç"
+                      className="ml-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
+                    >
+                      ↗
                     </a>
                   </td>
                   <td className="max-w-xs truncate px-4 py-3 text-zinc-600 dark:text-zinc-400">

@@ -11,7 +11,7 @@ export async function SiteHeader() {
   return (
     <header className="border-b border-zinc-200 dark:border-zinc-800">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-        <Link href="/" className="text-lg font-bold tracking-tight">
+        <Link href="/" className="text-xl font-bold tracking-tight">
           Lumora<span className="text-zinc-500">Link</span>
         </Link>
 

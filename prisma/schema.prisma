@@ -110,6 +110,11 @@ model Click {
   os        String?
   referrer  String? // hangi siteden gelindi
 
+  // Tekil ziyaretçi sayımı için: hash(gün + IP + tarayıcı + gizli tuz).
+  // IP'nin kendisi hiçbir zaman saklanmaz; tuz her gün değiştiği için
+  // aynı kişi günler arasında takip edilemez (gizlilik dostu sayım).
+  visitorHash String? @db.Char(64)
+
   linkId String
   link   Link   @relation(fields: [linkId], references: [id], onDelete: Cascade)
 

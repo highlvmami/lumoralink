@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --series-1: #2a78d6; /* grafik rengi (açık tema) */
 }
 
 @theme inline {
@@ -16,6 +17,7 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --series-1: #3987e5; /* koyu zeminde daha okunur ton */
   }
 }
 
