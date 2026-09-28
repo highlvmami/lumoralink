@@ -1,0 +1,7 @@
+# Satır sonlarını tüm işletim sistemlerinde LF olarak tut.
+# Windows'ta çalışsan da depo tutarlı kalır, "LF will be replaced by CRLF" uyarıları çıkmaz.
+* text=auto eol=lf
+
+# İkili dosyalara dokunma
+*.png binary
+*.ico binary

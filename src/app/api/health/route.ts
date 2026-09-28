@@ -6,8 +6,8 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     await prisma.$queryRaw`SELECT 1`;
-    const linkCount = await prisma.link.count();
-    return Response.json({ status: "ok", database: "connected", linkCount });
+    // Herkese açık uç: iç veri (link sayısı vb.) göstermiyoruz, sadece durum
+    return Response.json({ status: "ok", database: "connected" });
   } catch (error) {
     console.error(error);
     return Response.json(

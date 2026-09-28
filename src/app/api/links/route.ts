@@ -4,6 +4,7 @@
 import { z } from "zod";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { checkLinkCreateLimit } from "@/lib/rate-limit";
 import { getSession } from "@/lib/session";
 import { generateSlug } from "@/lib/slug";
 import { createLinkSchema } from "@/lib/validation";
@@ -19,6 +20,15 @@ export async function POST(request: Request) {
   const session = await getSession();
   if (!session) {
     return Response.json({ error: "Link oluşturmak için giriş yapmalısın" }, { status: 401 });
+  }
+
+  // 0.5) Hız sınırı: 429 Too Many Requests + ne zaman tekrar denenebileceği
+  const limit = await checkLinkCreateLimit(session.user.id);
+  if (!limit.ok) {
+    return Response.json(
+      { error: limit.message },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } },
+    );
   }
 
   // 1) Gövdeyi oku. Bozuk JSON gelirse uygulama çökmesin, 400 dönsün.

@@ -1,6 +1,6 @@
 // Prisma CLI ayarları: şema nerede, migration'lar nereye yazılacak, veritabanı adresi ne.
 import "dotenv/config";
-import { defineConfig, env } from "prisma/config";
+import { defineConfig } from "prisma/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -8,6 +8,9 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: env("DATABASE_URL"),
+    // Migration'lar doğrudan bağlantıyı (DIRECT_URL) kullanır; Neon gibi servislerde
+    // uygulamanın kullandığı "pooled" bağlantı migration için uygun değildir.
+    // Yerelde DIRECT_URL tanımlı değilse DATABASE_URL kullanılır.
+    url: process.env.DIRECT_URL ?? process.env.DATABASE_URL ?? "",
   },
 });
